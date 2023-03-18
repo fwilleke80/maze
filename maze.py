@@ -18,8 +18,8 @@ import random
 # Settings
 SCRIPT_TITLE = "Maze test"
 SCREEN_SIZE: tuple[int, int] = (1280, 720)
-BLOCK_SIZE: int = 8
-FONT_SIZE: int = 27
+BLOCK_SIZE: int = 24
+FONT_SIZE: int = 20
 FPS: int = 60
 COL_BACKGROUND: tuple[int, int, int] = (255, 255, 255)
 COL_UNVISITED: tuple[int, int, int] = (0, 0, 255)
@@ -287,7 +287,7 @@ def main():
 
     isRunning = True
     isAdvancing = True
-    checkGoal = False
+    checkGoal = True
     while isRunning:
         # Event handling
         for event in pygame.event.get():
