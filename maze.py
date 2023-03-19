@@ -19,7 +19,7 @@ import random
 SCRIPT_TITLE = "Maze test"
 FRAMESKIP = 10
 SCREEN_SIZE: tuple[int, int] = (1280, 720)
-BLOCK_SIZE: int = 16
+BLOCK_SIZE: int = 6
 FONT_SIZE: int = 20
 FPS: int = 30
 COL_BACKGROUND: tuple[int, int, int] = (255, 255, 255)
@@ -78,7 +78,7 @@ class Maze:
         self.size: int = width * height
         self.cells: list[enum.IntFlag] = [Maze.CELLFLAGS.CLEAR for _ in range(self.size)]
         self.visitedCells: int = 0
-        self.stack: collections.deque[(int, int)] = collections.deque()
+        self.stack: collections.deque[(int, int)] = collections.deque(maxlen=None)
         self.random = random.Random()
         self.random.seed(randomSeed)
         self.goalPath: list[tuple[int, int]] = []
