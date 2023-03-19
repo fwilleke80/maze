@@ -17,10 +17,11 @@ import random
 
 # Settings
 SCRIPT_TITLE = "Maze test"
+FRAMESKIP = 10
 SCREEN_SIZE: tuple[int, int] = (1280, 720)
-BLOCK_SIZE: int = 24
+BLOCK_SIZE: int = 16
 FONT_SIZE: int = 20
-FPS: int = 60
+FPS: int = 30
 COL_BACKGROUND: tuple[int, int, int] = (255, 255, 255)
 COL_UNVISITED: tuple[int, int, int] = (0, 0, 255)
 COL_LINE: tuple[int, int, int] = (0, 0, 0)
@@ -28,8 +29,8 @@ COL_START: tuple[int, int, int] = (0, 255, 0)
 COL_GOAL: tuple[int, int, int] = (255, 0, 0)
 COL_TEXT: tuple[int, int, int] = (192, 192, 192)
 COL_TEXT_DROP: tuple[int, int, int] = (64, 64, 64)
-LINE_WIDTH: int = 2
-LINE_WIDTH_GOAL: int = 5
+LINE_WIDTH: int = int(max(1, BLOCK_SIZE / 8))
+LINE_WIDTH_GOAL: int = int(BLOCK_SIZE / 2) - 2
 
 DEFAULT_STARTPOS: tuple[int, int] = (0, 0)
 DEFAULT_SEED = 1234
@@ -256,7 +257,7 @@ class Maze:
         """
         Draws the goal path, if there is one.
         """
-        halfBlockSize = int(BLOCK_SIZE / 2)
+        halfBlockSize = int(BLOCK_SIZE / 2) - 1
         previousPos = None
         for pos in self.goalPath:
             pos = (pos[0] * BLOCK_SIZE + halfBlockSize, pos[1] * BLOCK_SIZE + halfBlockSize)
@@ -336,16 +337,18 @@ def main():
         # Update and draw maze
         if isAdvancing:
             screen.fill(COL_UNVISITED)
-            needsUpdate = False
-            while not needsUpdate and isAdvancing:
-                isAdvancing, needsUpdate = maze.advance()
+            for _ in range(FRAMESKIP + 1):
+                needsUpdate = False
+                while not needsUpdate and isAdvancing:
+                    isAdvancing, needsUpdate = maze.advance()
+                    if checkGoal:
+                        maze.check_goal_reached(mazeGoalPos)
             maze.draw(screen)
 
             halfLineWidth = int(LINE_WIDTH / 2)
 
             if checkGoal:
-                if maze.check_goal_reached(mazeGoalPos):
-                    maze.draw_goal_path(screen)
+                maze.draw_goal_path(screen)
                 rect = pygame.Rect(mazeGoalPos[0] * BLOCK_SIZE + halfLineWidth, mazeGoalPos[1] * BLOCK_SIZE + halfLineWidth, BLOCK_SIZE - LINE_WIDTH, BLOCK_SIZE - LINE_WIDTH)
                 screen.fill(COL_GOAL, rect)
 
